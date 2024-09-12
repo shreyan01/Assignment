@@ -1,6 +1,6 @@
 import requests
-
-DEEPGRAM_API_KEY = "a66ec65de6e707d6735e7990a845449ba18411bd"
+import os
+DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
 
 def detect_speakers(audio_file:str)->dict:
     try:

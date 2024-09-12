@@ -1,6 +1,7 @@
 from elevenlabs import generate, voices
+import os
 
-ELEVEN_LABS_API_KEY = "YOUR_ELEVEN_LABS_API_KEY"
+ELEVEN_LABS_API_KEY = os.getenv("ELEVEN_LABS_API_KEY")
 
 def generate_speech_for_speaker(voice_id: str, text: str, output_file: str):
     """
