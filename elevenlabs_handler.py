@@ -1,4 +1,4 @@
-from elevenlabs import generate
+from elevenlabs import generate, voices
 
 ELEVEN_LABS_API_KEY = "YOUR_ELEVEN_LABS_API_KEY"
 
