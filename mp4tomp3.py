@@ -1,11 +1,14 @@
 from pydub import AudioSegment
+import os
 
-def convert_mp4_to_mp3(mp4_path:str, mp3_output:str):
+def convert_mp4_to_mp3(mp4_file):
     try:
-        # Load the audio from the MP4 file
-        audio = AudioSegment.from_file(mp4_path, format="mp4")
-        # Export the audio as MP3
-        audio.export(mp3_output, format="mp3")
-        print(f"Conversion successful! MP3 saved as {mp3_output}")
+        audio = AudioSegment.from_file(mp4_file, format="mp4")
+        mp3_file = mp4_file.replace(".mp4", ".mp3")
+        audio.export(mp3_file, format="mp3")
+        print(f"Successfully converted {mp4_file} to {mp3_file}")
+        return mp3_file
     except Exception as e:
-        print(f"Error during conversion: {e}")
+        mp3_file = mp4_file.replace(".mp4", ".mp3")  # Ensure mp3_file is defined
+        print(f"Error converting {mp4_file} to {mp3_file}: {e}")
+
