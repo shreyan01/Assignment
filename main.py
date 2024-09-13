@@ -1,36 +1,31 @@
+from mp4tomp3 import convert_mp4_to_mp3
+from deepgram_handler import detect_speakers
+from audio_separator import split_audio_by_speaker
 from elevenlabs_handler import generate_speech_for_speaker
 
-# Paths
-audio_file = "input_audio.mp3"  # Your MP3 file
-output_files = {
-    0: "speaker_0_output.mp3",  # Output file for speaker 0
-    1: "speaker_1_output.mp3",  # Output file for speaker 1
-    # Add more speakers if necessary
-}
+# File paths
+mp4_file = "input_video.mp4"
+mp3_file = "output_audio.mp3"
+output_dir = "separated_speakers"
+custom_text = "This is the custom text each speaker should say."
 
-# Text for each speaker (can be customized)
-text_for_speaker = {
-    0: "This is a new sentence for Speaker 0",
-    1: "This is a new sentence for Speaker 1"
-}
+# Step 1: Convert MP4 to MP3
+convert_mp4_to_mp3(mp4_file, mp3_file)
 
-# Voice IDs (replace with actual voice IDs from Eleven Labs)
-voice_ids = {
-    0: 'voice_id_for_speaker_0',
-    1: 'voice_id_for_speaker_1'
-}
+# Step 2: Run Deepgram Diarization
+diarization_data = detect_speakers(mp3_file)
 
-def main():
-    # Example usage of generating speech for different speakers
-    for speaker, text in text_for_speaker.items():
-        voice_id = voice_ids.get(speaker)
-        output_file = output_files.get(speaker)
+if diarization_data:
+    # Step 3: Split audio by speakers based on Deepgram timestamps
+    split_audio_by_speaker(mp3_file, diarization_data, output_dir)
 
-        if voice_id and output_file:
-            print(f"Generating speech for speaker {speaker}...")
-            generate_speech_for_speaker(voice_id, text, output_file)
-        else:
-            print(f"Voice ID or output file missing for speaker {speaker}.")
+    # Step 4: Clone voices and generate speech using Eleven Labs
+    # Assume speaker voice IDs are manually assigned or extracted
+    voice_ids = {
+        0: "voice_id_for_speaker_0",
+        1: "voice_id_for_speaker_1"
+    }
 
-if __name__ == "__main__":
-    main()
+    for speaker, voice_id in voice_ids.items():
+        output_speech = f"{output_dir}/speaker_{speaker}_custom_speech.mp3"
+        generate_speech_for_speaker(voice_id, custom_text, output_speech)
