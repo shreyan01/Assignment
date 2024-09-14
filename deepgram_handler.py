@@ -1,37 +1,48 @@
+import os
 import requests
 import json
 
-DEEPGRAM_API_KEY = 'YOUR_DEEPGRAM_API_KEY'
+# Set your Deepgram API key here
+DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
 
-def detect_speakers(audio_file: str) -> dict:
-    """
-    Sends the audio file to Deepgram API and detects speakers with timestamps.
-
-    Parameters:
-        audio_file (str): Path to the MP3 file.
-    
-    Returns:
-        dict: Parsed JSON response with speaker timestamps and words.
-    """
+AUDIO_FILE = "input.mp3"
+OUTPUT_FILE = "output.json"
+def main():
     try:
-        url = 'https://api.deepgram.com/v1/listen'
+        # Prepare the headers with the API key
         headers = {
-            'Authorization': f'Token {DEEPGRAM_API_KEY}',
-            'Content-Type': 'audio/mp3'
-        }
-        params = {
-            'diarize': 'true'  # Enable speaker diarization
+            "Authorization": f"Token {DEEPGRAM_API_KEY}",
+            "Content-Type": "audio/wav",
         }
 
         # Read the audio file
-        with open(audio_file, 'rb') as f:
-            audio_data = f.read()
+        with open(AUDIO_FILE, "rb") as file:
+            audio_data = file.read()
 
-        # Send request to Deepgram API
-        response = requests.post(url, headers=headers, params=params, data=audio_data)
-        return response.json()
+        # Prepare the request payload
+        payload = audio_data
+
+        # Prepare the transcription options
+        params = {
+            "diarize": "true",
+            "model": "nova-2"
+        }
+
+        # Make the API request
+        response = requests.post("https://api.deepgram.com/v1/listen", headers=headers, params=params, data=payload)
+
+        # Parse the response as JSON
+        response_json = response.json()
+
+        # Print the JSON response in a pretty format
+        with open(OUTPUT_FILE, "w") as file:
+            json.dump(response_json, file, indent=4)
+
+        print(f"JSON response saved to {OUTPUT_FILE}")
+
 
     except Exception as e:
-        print(f"Error in Deepgram API call: {e}")
-        return None
+        print(f"Exception: {e}")
 
+if __name__ == "__main__":
+    main()
