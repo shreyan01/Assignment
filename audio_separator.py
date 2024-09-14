@@ -1,29 +1,39 @@
+import os 
+import json 
 from pydub import AudioSegment
 
-def split_audio_by_speaker(mp3_file: str, diarization_data: dict, output_dir: str):
-    """
-    Splits an MP3 file into multiple segments based on Deepgram's speaker diarization.
+def extract_speaker_segments(json_file, mp3_file):
+    with open(json_file, 'r') as file:
+        data = json.load(file)
 
-    Parameters:
-        mp3_file (str): Path to the MP3 file.
-        diarization_data (dict): The speaker timestamps data from Deepgram.
-        output_dir (str): Directory to save the separated audio files.
-    
-    Returns:
-        None
-    """
+    # Load the MP3 file
     audio = AudioSegment.from_mp3(mp3_file)
-    
-    for idx, turn in enumerate(diarization_data['results']['channels'][0]['alternatives'][0]['words']):
-        start_time = turn['start'] * 1000  # Convert to milliseconds
-        end_time = turn['end'] * 1000      # Convert to milliseconds
-        speaker = turn.get('speaker', 'unknown')
 
-        # Extract segment
+    # Dictionary to store audio segments for each speaker
+    speaker_segments = {}
+
+    # Extract speaker timestamps from the JSON
+    for word_data in data['results']['channels'][0]['alternatives'][0]['words']:
+        speaker = word_data['speaker']  # Speaker ID
+        start_time = word_data['start'] * 1000  # Convert to milliseconds for Pydub
+        end_time = word_data['end'] * 1000  # Convert to milliseconds for Pydub
+
+        # Extract the audio segment for the current word
         segment = audio[start_time:end_time]
 
-        # Save the speaker's audio segment
-        output_path = f"{output_dir}/speaker_{speaker}_segment_{idx}.mp3"
-        segment.export(output_path, format="mp3")
-        print(f"Saved {output_path}")
+        # Append the segment to the corresponding speaker's audio
+        if speaker in speaker_segments:
+            speaker_segments[speaker] += segment
+        else:
+            speaker_segments[speaker] = segment
 
+    # Save the extracted segments for each speaker
+    for speaker, segment in speaker_segments.items():
+        segment.export(f"speaker_{speaker}.mp3", format="mp3")
+        print(f"Speaker {speaker}'s audio has been saved as speaker_{speaker}.mp3")
+
+# Example usage
+json_file = "output.json"  # Diarized transcript
+mp3_file = "input.mp3"    # Original MP3 file
+
+extract_speaker_segments(json_file, mp3_file)
