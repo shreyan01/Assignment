@@ -1,0 +1,8 @@
+{
+    "pipeline": {
+      "dev": {
+        "dependsOn": ["^dev"],
+        "outputs": []
+      }
+    }
+  }

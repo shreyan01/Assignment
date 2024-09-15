@@ -3,10 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [],
   "author": "",
+  "private": true,
+  "workspaces": [
+    "apps/frontend"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:backend": "cd apps/backend && python app.py",
+    "dev:frontend": "cd apps/frontend && next dev"
+  },
+  "devDependencies": {
+    "turbo": "^1.0.0"
+  },
   "license": "ISC"
 }
