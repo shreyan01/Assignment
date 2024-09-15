@@ -1,243 +1,186 @@
+"use client"
+
+import { useState } from 'react'
 import { Button } from "./components/ui/button"
-import { Mic, Zap, Speaker } from "lucide-react"
+import { Input } from "./components/ui/input"
+import { Mic, Play, Upload, Wand2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 export default function Component() {
+  const [isRecording, setIsRecording] = useState(false)
+
+  const router = useRouter()
   return (
-    <div className="flex flex-col min-h-screen">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
-        <a className="flex items-center justify-center" href="#">
-          <span className="sr-only">VoiceAI</span>
-        </a>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <a className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Features
-          </a>
-          <a className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Pricing
-          </a>
-          <a className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            About
-          </a>
-          <a className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Contact
-          </a>
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <header className="container mx-auto px-4 py-6">
+        <nav className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Wand2 className="h-8 w-8 text-purple-600" />
+            <span className="text-2xl font-bold text-gray-800 dark:text-white">VoiceAI</span>
+          </div>
+          <div className="hidden md:flex space-x-4">
+            <a href="#features" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Features</a>
+            <a href="#how-it-works" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">How It Works</a>
+            <a href="#pricing" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Pricing</a>
+          </div>
+          <Button>Sign Up</Button>
         </nav>
       </header>
-      <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-r from-purple-600 via-pink-500 to-red-500">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none text-white">
-                  Your Voice, Amplified by AI
-                </h1>
-                <p className="mx-auto max-w-[700px] text-gray-200 md:text-xl">
-                  Upload your voice, generate custom audio. Experience the future of personalized content creation.
-                </p>
-              </div>
-              <div className="space-x-4">
-                <Button className="bg-white text-purple-600 hover:bg-gray-100">Get Started</Button>
-                <Button variant="outline" className="bg-transparent text-white border-white hover:bg-white/20">
-                  Learn More
-                </Button>
-              </div>
+
+      <main>
+        <section className="container mx-auto px-4 py-16 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
+            Your Voice, Amplified by AI
+          </h1>
+          <p className="text-xl mb-8 text-gray-600 dark:text-gray-300">
+            Upload your voice, generate custom audio. It's that simple.
+          </p>
+          <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
+            <Button size="lg" className="bg-purple-600 hover:bg-purple-700" onClick={() => router.push('/generate-audio')}>
+              Get Started
+            </Button>
+            <Button size="lg" variant="outline">
+              Learn More
+            </Button>
+          </div>
+        </section>
+
+        <section id="features" className="container mx-auto px-4 py-16">
+          <h2 className="text-3xl font-bold mb-8 text-center">Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <Upload className="h-12 w-12 text-purple-600 mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Custom Voice Upload</h3>
+              <p className="text-gray-600 dark:text-gray-300">Upload your own voice or choose from our library of professional voice actors.</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <Wand2 className="h-12 w-12 text-purple-600 mb-4" />
+              <h3 className="text-xl font-semibold mb-2">AI-Powered Generation</h3>
+              <p className="text-gray-600 dark:text-gray-300">Our advanced AI models create natural-sounding speech in your chosen voice.</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <Play className="h-12 w-12 text-purple-600 mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Instant Playback</h3>
+              <p className="text-gray-600 dark:text-gray-300">Listen to your generated audio instantly and make adjustments in real-time.</p>
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
-          <div className="container px-4 md:px-6 text-black">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-black">Key Features</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="flex flex-col items-center text-center">
-                <Mic className="h-12 w-12 mb-4 text-purple-600" />
-                <h3 className="text-xl font-bold mb-2">Custom Voice Upload</h3>
-                <p className="text-gray-600">Upload your unique voice and let our AI learn its intricacies.</p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <Zap className="h-12 w-12 mb-4 text-purple-600" />
-                <h3 className="text-xl font-bold mb-2">AI-Powered Generation</h3>
-                <p className="text-gray-600">Generate natural-sounding audio using cutting-edge AI technology.</p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <Speaker className="h-12 w-12 mb-4 text-purple-600" />
-                <h3 className="text-xl font-bold mb-2">Versatile Output</h3>
-                <p className="text-gray-600">Create voiceovers, podcasts, or any audio content with your digital voice clone.</p>
-              </div>
+
+        <section id="how-it-works" className="container mx-auto px-4 py-16 bg-gray-100 dark:bg-gray-900 rounded-lg">
+          <h2 className="text-3xl font-bold mb-8 text-center">How It Works</h2>
+          <div className="max-w-md mx-auto space-y-8">
+            <div className="flex items-center space-x-4">
+              <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
+              <Input type="file" accept="audio/*" className="flex-grow" />
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
+              <Input type="text" placeholder="Enter text to generate" className="flex-grow" />
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
+              <Button className="flex-grow" onClick={() => setIsRecording(!isRecording)}>
+                {isRecording ? 'Stop Recording' : 'Start Recording'}
+                <Mic className={`ml-2 h-4 w-4 ${isRecording ? 'text-red-500' : ''}`} />
+              </Button>
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">How It Works</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center text-xl font-bold mb-4">1</div>
-                <h3 className="text-xl font-bold mb-2">Upload Your Voice</h3>
-                <p className="text-gray-600">Record or upload a sample of your voice for our AI to analyze.</p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center text-xl font-bold mb-4">2</div>
-                <h3 className="text-xl font-bold mb-2">AI Learning</h3>
-                <p className="text-gray-600">Our advanced AI models learn the unique characteristics of your voice.</p>
-              </div>
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-full bg-purple-600 text-white flex items-center justify-center text-xl font-bold mb-4">3</div>
-                <h3 className="text-xl font-bold mb-2">Generate Audio</h3>
-                <p className="text-gray-600">Input text and generate audio in your voice with a click of a button.</p>
-              </div>
+
+        <section className="container mx-auto px-4 py-16">
+          <h2 className="text-3xl font-bold mb-8 text-center">What Our Users Say</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <p className="text-gray-600 dark:text-gray-300 mb-4">"VoiceAI has revolutionized my workflow. I can now create professional voiceovers in minutes!"</p>
+              <p className="font-semibold">- Sarah J., Content Creator</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <p className="text-gray-600 dark:text-gray-300 mb-4">"The quality of the generated audio is incredible. It's hard to tell it apart from a real recording."</p>
+              <p className="font-semibold">- Mark T., Podcast Host</p>
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-black">What Our Users Say</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <p className="text-gray-600 mb-4">"This tool has revolutionized my content creation process. The voice cloning is incredibly accurate!"</p>
-                <p className="font-bold">- Sarah K., Content Creator</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <p className="text-gray-600 mb-4">"I can now produce podcasts faster than ever. The AI-generated audio sounds just like me!"</p>
-                <p className="font-bold">- Mike R., Podcaster</p>
-              </div>
+
+        <section id="pricing" className="container mx-auto px-4 py-16">
+          <h2 className="text-3xl font-bold mb-8 text-center">Pricing Plans</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-2">Basic</h3>
+              <p className="text-3xl font-bold mb-4">$9.99<span className="text-sm font-normal">/month</span></p>
+              <ul className="mb-6 space-y-2">
+                <li>100 minutes of audio generation</li>
+                <li>5 custom voice uploads</li>
+                <li>Standard support</li>
+              </ul>
+              <Button className="w-full">Choose Plan</Button>
             </div>
-          </div>
-        </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12 text-black">Pricing Plans</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-black">
-              <div className="flex flex-col p-6 bg-white rounded-lg shadow-md">
-                <h3 className="text-xl font-bold mb-4">Basic</h3>
-                <p className="text-3xl font-bold mb-4">$9.99<span className="text-sm font-normal">/month</span></p>
-                <ul className="mb-6 space-y-2">
-                  <li className="flex items-center">
-                    <svg
-                      className="w-4 h-4 mr-2 text-green-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    1 Custom Voice
-                  </li>
-                  <li className="flex items-center">
-                    <svg
-                      className="w-4 h-4 mr-2 text-green-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    100 Minutes of Generation
-                  </li>
-                </ul>
-                <Button className="mt-auto focus-ring-purple-600">Choose Plan</Button>
-              </div>
-              <div className="flex flex-col p-6 bg-purple-600 rounded-lg shadow-md text-white">
-                <h3 className="text-xl font-bold mb-4">Pro</h3>
-                <p className="text-3xl font-bold mb-4">$24.99<span className="text-sm font-normal">/month</span></p>
-                <ul className="mb-6 space-y-2">
-                  <li className="flex items-center">
-                    <svg
-                      className="w-4 h-4 mr-2 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    3 Custom Voices
-                  </li>
-                  <li className="flex items-center">
-                    <svg
-                      className="w-4 h-4 mr-2 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    500 Minutes of Generation
-                  </li>
-                  <li className="flex items-center">
-                    <svg
-                      className="w-4 h-4 mr-2 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Priority Support
-                  </li>
-                </ul>
-                <Button className="mt-auto bg-white text-purple-600 hover:bg-gray-100">Choose Plan</Button>
-              </div>
-              <div className="flex flex-col p-6 bg-white rounded-lg shadow-md">
-                <h3 className="text-xl font-bold mb-4">Enterprise</h3>
-                <p className="text-3xl font-bold mb-4">Custom</p>
-                <ul className="mb-6 space-y-2">
-                  <li className="flex items-center">
-                    <svg
-                      className="w-4 h-4 mr-2 text-green-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Unlimited Custom Voices
-                  </li>
-                  <li className="flex items-center">
-                    <svg
-                      className="w-4 h-4 mr-2 text-green-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Unlimited Generation
-                  </li>
-                  <li className="flex items-center">
-                    <svg
-                      className="w-4 h-4 mr-2 text-green-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Dedicated Account Manager
-                  </li>
-                </ul>
-                <Button className="mt-auto">Contact Sales</Button>
-              </div>
+            <div className="bg-purple-600 text-white p-6 rounded-lg shadow-lg transform scale-105">
+              <h3 className="text-xl font-semibold mb-2">Pro</h3>
+              <p className="text-3xl font-bold mb-4">$24.99<span className="text-sm font-normal">/month</span></p>
+              <ul className="mb-6 space-y-2">
+                <li>500 minutes of audio generation</li>
+                <li>20 custom voice uploads</li>
+                <li>Priority support</li>
+                <li>Advanced voice editing tools</li>
+              </ul>
+              <Button className="w-full bg-white text-purple-600 hover:bg-gray-100">Choose Plan</Button>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-2">Enterprise</h3>
+              <p className="text-3xl font-bold mb-4">Custom</p>
+              <ul className="mb-6 space-y-2">
+                <li>Unlimited audio generation</li>
+                <li>Unlimited custom voice uploads</li>
+                <li>24/7 premium support</li>
+                <li>API access</li>
+                <li>Custom integrations</li>
+              </ul>
+              <Button className="w-full">Contact Sales</Button>
             </div>
           </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500">© 2023 VoiceAI Inc. All rights reserved.</p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <a className="text-xs hover:underline underline-offset-4" href="#">
-            Terms of Service
-          </a>
-          <a className="text-xs hover:underline underline-offset-4" href="#">
-            Privacy
-          </a>
-        </nav>
+
+      <footer className="bg-gray-100 dark:bg-gray-900">
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Product</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Features</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Pricing</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">FAQ</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Company</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">About</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Blog</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Careers</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Resources</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Documentation</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Tutorials</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Support</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Privacy Policy</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Terms of Service</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Cookie Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <p className="text-center text-gray-500 dark:text-gray-400">&copy; 2023 VoiceAI. All rights reserved.</p>
+          </div>
+        </div>
       </footer>
     </div>
   )
