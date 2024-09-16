@@ -1,13 +1,13 @@
 import os
 import requests
 import json
+from pydub import AudioSegment
+from io import BytesIO
 
 # Set your Deepgram API key here
 DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
 
-AUDIO_FILE = "input.mp3"
-OUTPUT_FILE = "output.json"
-def main():
+def transcriber(mp3_data):
     try:
         # Prepare the headers with the API key
         headers = {
@@ -15,12 +15,8 @@ def main():
             "Content-Type": "audio/wav",
         }
 
-        # Read the audio file
-        with open(AUDIO_FILE, "rb") as file:
-            audio_data = file.read()
-
         # Prepare the request payload
-        payload = audio_data
+        payload = mp3_data
 
         # Prepare the transcription options
         params = {
@@ -34,15 +30,8 @@ def main():
         # Parse the response as JSON
         response_json = response.json()
 
-        # Print the JSON response in a pretty format
-        with open(OUTPUT_FILE, "w") as file:
-            json.dump(response_json, file, indent=4)
-
-        print(f"JSON response saved to {OUTPUT_FILE}")
-
+        return response_json
 
     except Exception as e:
         print(f"Exception: {e}")
-
-if __name__ == "__main__":
-    main()
+        return None
