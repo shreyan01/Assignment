@@ -65,28 +65,7 @@ export default function Component() {
             </div>
           </div>
         </section>
-
-        <section id="how-it-works" className="container mx-auto px-4 py-16 bg-gray-100 dark:bg-gray-900 rounded-lg">
-          <h2 className="text-3xl font-bold mb-8 text-center">How It Works</h2>
-          <div className="max-w-md mx-auto space-y-8">
-            <div className="flex items-center space-x-4">
-              <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</div>
-              <Input type="file" accept="audio/*" className="flex-grow" />
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</div>
-              <Input type="text" placeholder="Enter text to generate" className="flex-grow" />
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">3</div>
-              <Button className="flex-grow" onClick={() => setIsRecording(!isRecording)}>
-                {isRecording ? 'Stop Recording' : 'Start Recording'}
-                <Mic className={`ml-2 h-4 w-4 ${isRecording ? 'text-red-500' : ''}`} />
-              </Button>
-            </div>
-          </div>
-        </section>
-
+        
         <section className="container mx-auto px-4 py-16">
           <h2 className="text-3xl font-bold mb-8 text-center">What Our Users Say</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

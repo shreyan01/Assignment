@@ -59,7 +59,7 @@ export default function GenerateAudioPage() {
                 type="file"
                 accept="audio/*"
                 onChange={handleFileUpload}
-                className="flex-grow"
+                className="flex-grow text-white"
               />
               <Button variant="outline" className="flex items-center space-x-2">
                 <Upload className="h-4 w-4" />
