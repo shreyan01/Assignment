@@ -7,6 +7,7 @@ import json
 from io import BytesIO
 from dotenv import load_dotenv
 import logging
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv(dotenv_path=".env")
 
@@ -18,6 +19,15 @@ XI_API_KEY = os.getenv("XI_API_KEY")
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000/generate-audio"],  # Adjust this to match your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/process_audio/")
 async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
@@ -141,7 +151,7 @@ async def text_to_speech(voice_id: str, text: str):
             "model_id": "eleven_monolingual_v1",
             "voice_settings": {
                 "stability": 0.5,
-                "similarity_boost": 0.5
+                "similarity_boost": 1
             }
         }
         response = requests.post(url, json=data, headers=headers)
