@@ -10,6 +10,7 @@ export default function GenerateAudioPage() {
   const [customText, setCustomText] = useState('')
   const [generatedAudioUrl, setGeneratedAudioUrl] = useState<string | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null
@@ -20,19 +21,63 @@ export default function GenerateAudioPage() {
     setCustomText(event.target.value)
   }
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+    if (!uploadedFile || !customText) {
+      setError("Please upload a file and enter custom text.")
+      return
+    }
+
     setIsGenerating(true)
-    // This is where you would typically call your API to generate the audio
-    // For this example, we'll just simulate it with a timeout
-    setTimeout(() => {
-      setGeneratedAudioUrl('/placeholder-audio.mp3')
+    setError(null)
+
+    const formData = new FormData()
+    formData.append('file', uploadedFile)
+    formData.append('text', customText)
+
+    try {
+      console.log('Sending request to:', 'http://localhost:8000/process_audio/')
+      const response = await fetch('http://localhost:8000/process_audio/', {
+        method: 'POST',
+        body: formData,
+      })
+
+      console.log('Response status:', response.status)
+      console.log('Response headers:', Object.fromEntries(response.headers))
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Error response:', errorText)
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+
+      const blob = await response.blob()
+      console.log('Received blob:', blob)
+
+      if (blob.type !== 'audio/mpeg') {
+        console.error('Unexpected content type:', blob.type)
+        throw new Error(`Unexpected content type: ${blob.type}`);
+      }
+
+      const url = URL.createObjectURL(blob)
+      setGeneratedAudioUrl(url)
+      console.log('Generated audio URL:', url)
+    } catch (error: any) {
+      console.error('Error generating audio:', error)
+      setError(`An error occurred while generating the audio: ${error.message}`)
+    } finally {
       setIsGenerating(false)
-    }, 2000)
+    }
   }
 
   const handleDownload = () => {
-    // In a real application, you would implement the actual download logic here
-    console.log('Downloading audio file...')
+    if (generatedAudioUrl) {
+      const link = document.createElement('a')
+      link.href = generatedAudioUrl
+      link.download = 'generated_audio.mp3'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
   }
 
   return (
@@ -57,7 +102,7 @@ export default function GenerateAudioPage() {
             <div className="flex items-center space-x-4">
               <Input
                 type="file"
-                accept="audio/*"
+                accept="audio/*,video/*"
                 onChange={handleFileUpload}
                 className="flex-grow text-white"
               />
@@ -97,6 +142,10 @@ export default function GenerateAudioPage() {
               'Generate Audio'
             )}
           </Button>
+
+          {error && (
+            <p className="text-red-500 text-center">{error}</p>
+          )}
 
           {generatedAudioUrl && (
             <div className="space-y-4">
