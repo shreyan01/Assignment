@@ -3,14 +3,13 @@
   "builds": [
     {
       "src": "apps/frontend/package.json",
-      "use": "@vercel/next",
-      "config": { "buildCommand": "npm run build" }
+      "use": "@vercel/next"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/apps/frontend/app/page"
+      "dest": "/apps/frontend/app/$1"
     }
   ]
 }
