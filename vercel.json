@@ -8,6 +8,10 @@
   ],
   "routes": [
     {
+      "src": "/",
+      "dest": "/apps/frontend/app/page.tsx"
+    },
+    {
       "src": "/(.*)",
       "dest": "/apps/frontend/app/$1"
     }
