@@ -4,7 +4,7 @@
     {
       "src": "apps/frontend/package.json",
       "use": "@vercel/next",
-      "config": { "buildCommand": "npm run vercel-build" }
+      "config": { "buildCommand": "npm run build" }
     }
   ],
   "routes": [
