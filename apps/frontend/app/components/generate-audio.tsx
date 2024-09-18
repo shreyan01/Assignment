@@ -67,9 +67,10 @@ export default function GenerateAudioPage() {
       const url = URL.createObjectURL(blob)
       setGeneratedAudioUrl(url)
       console.log('Generated audio URL:', url)
-    } catch (error: any) {
-      console.error('Error generating audio:', error)
-      setError(`An error occurred while generating the audio: ${error.message}`)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('Error generating audio:', errorMessage);
+      setError(`An error occurred while generating the audio: ${errorMessage}`);
     } finally {
       setIsGenerating(false)
     }
