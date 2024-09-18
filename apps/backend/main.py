@@ -151,7 +151,7 @@ async def text_to_speech(voice_id: str, text: str):
             "model_id": "eleven_monolingual_v1",
             "voice_settings": {
                 "stability": 0.5,
-                "similarity_boost": 1
+                "similarity_boost": 0.9
             }
         }
         response = requests.post(url, json=data, headers=headers)

@@ -27,6 +27,12 @@ export default function GenerateAudioPage() {
       return
     }
 
+    // Check if the file still exists and is accessible
+    if (!(uploadedFile instanceof File) || uploadedFile.size === 0) {
+      setError("The selected file is no longer available. Please select the file again.")
+      return
+    }
+
     setIsGenerating(true)
     setError(null)
 
