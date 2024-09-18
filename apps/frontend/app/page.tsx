@@ -1,12 +1,10 @@
 "use client"
 
-import { useState } from 'react'
 import { Button } from "./components/ui/button"
 import { Play, Upload, Wand2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function Component() {
-  const [isRecording, setIsRecording] = useState(false)
 
   const router = useRouter()
   return (
