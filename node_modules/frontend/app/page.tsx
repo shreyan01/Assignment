@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from "./components/ui/button"
-import { Input } from "./components/ui/input"
-import { Mic, Play, Upload, Wand2 } from 'lucide-react'
+import { Play, Upload, Wand2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function Component() {
