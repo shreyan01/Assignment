@@ -11,5 +11,6 @@
       "src": "/(.*)",
       "dest": "/apps/frontend/app/$1"
     }
-  ]
+  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
