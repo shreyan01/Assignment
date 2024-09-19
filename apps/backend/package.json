@@ -2,8 +2,8 @@
   "name": "backend",
   "scripts": {
     "dev": "uvicorn main:app --reload",
-    "start": "gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker",
-    "start:prod": "export ENV=production && gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker",
+    "start": "uvicorn main:app --reload",
+    "start:prod": "export ENV=production && uvicorn main:app -w 4 -k uvicorn.workers.UvicornWorker",
     "migrate": "alembic upgrade head",
     "test": "pytest"
   }
