@@ -108,7 +108,7 @@ async def extract_speaker_segments():
                 speaker_segments[speaker] = segment
         for speaker, segment in speaker_segments.items():
             segment.export(f"speaker_{speaker}.mp3", format="mp3")
-        return speaker_segments
+        return speaker_segments  # <- Return the actual dictionary here
     except Exception as e:
         logger.error("Error extracting speaker segments: %s", e)
         return JSONResponse(content={"message": f"Error extracting speaker segments: {e}"}, status_code=500)
