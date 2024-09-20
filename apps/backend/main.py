@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000/generate-audio"],  # Adjust this to match your frontend URL
+    allow_origins=["https://voice-ai-rouge.vercel.app", "https://voice-ai-rouge.vercel.app/generate-audio"],  # Adjust this to match your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
