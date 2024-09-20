@@ -88,12 +88,12 @@ export default function GenerateAudioPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Wand2 className="h-8 w-8 text-purple-600" />
-            <span className="text-2xl font-bold text-gray-800 dark:text-white">VoiceAI</span>
+            <span className="text-2xl font-bold text-purple-600">VoiceAI</span>
           </div>
         </nav>
       </header>
@@ -105,16 +105,16 @@ export default function GenerateAudioPage() {
 
         <div className="max-w-2xl mx-auto space-y-8">
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">1. Upload Your Voice</h2>
+            <h2 className="text-2xl font-semibold text-purple-600">1. Upload Your Voice</h2>
             <div className="flex items-center space-x-4">
               <Input
                 type="file"
                 accept="audio/*,video/*"
                 onChange={handleFileUpload}
-                className="flex-grow text-white"
+                className="flex-grow text-black bg-white"
               />
-              <Button variant="outline" className="flex items-center space-x-2">
-                <Upload className="h-4 w-4" />
+              <Button variant="outline" className="flex items-center space-x-2 text-purple-400">
+                <Upload className="h-4 w-4 text-purple-400" />
                 <span>Upload</span>
               </Button>
             </div>
@@ -126,12 +126,12 @@ export default function GenerateAudioPage() {
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">2. Enter Your Text</h2>
+            <h2 className="text-2xl font-semibold text-purple-600">2. Enter Your Text</h2>
             <Textarea
               placeholder="Enter the text you want to convert to speech..."
               value={customText}
               onChange={handleTextChange}
-              className="w-full h-32"
+              className="w-full h-32 bg-white text-black"
             />
           </div>
 
