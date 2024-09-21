@@ -58,7 +58,7 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
         
         # Step 4: Generate speech from custom text using the first speaker
         if speaker_segments:
-            first_speaker = min(speaker_segments.keys())
+            first_speaker = min(speaker_segments)
             generated_speech = await generate_speech_from_speaker(first_speaker, text)
             return generated_speech
         else:
