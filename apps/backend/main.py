@@ -72,20 +72,50 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
 async def transcribe_audio():
     try:
         headers = {
-            "Authorization": f"Token {DEEPGRAM_API_KEY}",
-            "Content-Type": "audio/mpeg",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:129.0) Gecko/20100101 Firefox/129.0",
+            "Accept": "/",
+            "Content-Type": "application/json",
+            "Authorization": f"token {DEEPGRAM_API_KEY}",
+            "Origin": "https://playground.deepgram.com",
+            "Connection": "keep-alive",
         }
-        with open("input_audio.mp3", "rb") as file:
-            audio_data = file.read()
-        params = {
-            "diarize": "true",
-            "model": "nova-2"
-        }
-        response = requests.post("https://api.deepgram.com/v1/listen", headers=headers, params=params, data=audio_data)
-        response_json = response.json()
-        with open("output.json", "w") as file:
-            json.dump(response_json, file, indent=4)
-        return response_json  # Return the actual JSON data
+
+        # Load the audio file
+        with open("input_audio.mp3", "rb") as f:
+            files = {"file": f}
+            # Upload the audio file
+            upload_response = requests.post("https://manage.deepgram.com/storage/assets", headers=headers, files=files)
+
+        # Check upload response
+        if upload_response.status_code in (200, 201):
+            logger.info("Upload successful.")
+            asset_id = upload_response.json().get("asset")
+            if asset_id:
+                # Prepare the data for transcription
+                transcribe_data = {
+                    "url": f"https://manage.deepgram.com/storage/assets/{asset_id}"
+                }
+                # Request transcription
+                transcribe_response = requests.post(
+                    "https://api.deepgram.com/v1/listen?language=en&model=nova-2&paragraphs=true&diarize=true&filler_words=true",
+                    headers=headers,
+                    json=transcribe_data,
+                )
+
+                # Check transcription response
+                if transcribe_response.status_code in (200, 201):
+                    logger.info("Transcription successful.")
+                    return transcribe_response.json()  # Return the actual JSON data
+                else:
+                    logger.error(f"Error during transcription: {transcribe_response.status_code}")
+                    return {"message": f"Error during transcription: {transcribe_response.status_code}"}, 500
+            else:
+                logger.error("Asset ID not found in upload response.")
+                return {"message": "Asset ID not found in upload response."}, 500
+        else:
+            logger.error(f"Error during upload: {upload_response.status_code}")
+            return {"message": f"Error during upload: {upload_response.status_code}"}, 500
+
     except Exception as e:
         logger.error("Error transcribing audio: %s", e)
         return {"message": f"Error transcribing audio: {e}"}, 500
