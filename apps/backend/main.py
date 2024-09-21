@@ -46,7 +46,7 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
             with open(output_file, "wb") as f:
                 f.write(content)
         else:
-            return {"message": "Unsupported file format. Please upload MP3 or MP4."}, 400
+            return JSONResponse(content={"message": "Unsupported file format. Please upload MP3 or MP4."}, status_code=400)
         
         logger.info("File saved successfully: %s", output_file)
         
@@ -62,62 +62,33 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
             generated_speech = await generate_speech_from_speaker(first_speaker, text)
             return generated_speech
         else:
-            return {"message": "No speakers detected in the audio."}, 400
+            return JSONResponse(content={"message": "No speakers detected in the audio."}, status_code=400)
         
     except Exception as e:
         logger.error("Error processing audio: %s", e)
-        return {"message": f"Error processing audio: {e}"}, 500
+        return JSONResponse(content={"message": f"Error processing audio: {e}"}, status_code=500)
 
 @app.post("/transcribe_audio/")
 async def transcribe_audio():
     try:
         headers = {
-            "Accept": "/",
-            "Content-Type": "application/json",
-            "Authorization": f"token {DEEPGRAM_API_KEY}",
-            "Origin": "https://playground.deepgram.com",
-            "Connection": "keep-alive",
+            "Authorization": f"Token {DEEPGRAM_API_KEY}",
+            "Content-Type": "audio/mpeg",
         }
-
-        # Load the audio file
-        with open("input_audio.mp3", "rb") as f:
-            files = {"file": f}
-            # Upload the audio file
-            upload_response = requests.post("https://manage.deepgram.com/storage/assets", headers=headers, files=files)
-
-        # Check upload response
-        if upload_response.status_code in (200, 201):
-            logger.info("Upload successful.")
-            asset_id = upload_response.json().get("asset")
-            if asset_id:
-                # Prepare the data for transcription
-                transcribe_data = {
-                    "url": f"https://manage.deepgram.com/storage/assets/{asset_id}"
-                }
-                # Request transcription
-                transcribe_response = requests.post(
-                    "https://api.deepgram.com/v1/listen?language=en&model=nova-2&paragraphs=true&diarize=true&filler_words=true",
-                    headers=headers,
-                    json=transcribe_data,
-                )
-
-                # Check transcription response
-                if transcribe_response.status_code in (200, 201):
-                    logger.info("Transcription successful.")
-                    return transcribe_response.json()  # Return the actual JSON data
-                else:
-                    logger.error(f"Error during transcription: {transcribe_response.status_code}")
-                    return {"message": f"Error during transcription: {transcribe_response.status_code}"}, 500
-            else:
-                logger.error("Asset ID not found in upload response.")
-                return {"message": "Asset ID not found in upload response."}, 500
-        else:
-            logger.error(f"Error during upload: {upload_response.status_code}")
-            return {"message": f"Error during upload: {upload_response.status_code}"}, 500
-
+        with open("input_audio.mp3", "rb") as file:
+            audio_data = file.read()
+        params = {
+            "diarize": "true",
+            "model": "nova-2"
+        }
+        response = requests.post("https://api.deepgram.com/v1/listen", headers=headers, params=params, data=audio_data)
+        response_json = response.json()
+        with open("output.json", "w") as file:
+            json.dump(response_json, file, indent=4)
+        return JSONResponse(content={"message": "Transcription completed successfully"}, status_code=200)
     except Exception as e:
         logger.error("Error transcribing audio: %s", e)
-        return {"message": f"Error transcribing audio: {e}"}, 500
+        return JSONResponse(content={"message": f"Error transcribing audio: {e}"}, status_code=500)
 
 @app.post("/extract_speaker_segments/")
 async def extract_speaker_segments():
@@ -137,10 +108,10 @@ async def extract_speaker_segments():
                 speaker_segments[speaker] = segment
         for speaker, segment in speaker_segments.items():
             segment.export(f"speaker_{speaker}.mp3", format="mp3")
-        return speaker_segments  # Return the actual dictionary here
+        return speaker_segments  # <- Return the actual dictionary here
     except Exception as e:
         logger.error("Error extracting speaker segments: %s", e)
-        return {"message": f"Error extracting speaker segments: {e}"}, 500
+        return JSONResponse(content={"message": f"Error extracting speaker segments: {e}"}, status_code=500)
 
 @app.post("/generate_speech_from_speaker/")
 async def generate_speech_from_speaker(speaker_id: int, text: str):
