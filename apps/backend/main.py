@@ -33,10 +33,10 @@ app.add_middleware(
 async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
     try:
         logger.info("Received file: %s", file.filename)
-
+        
         # Step 1: Upload and process the audio/video file
         content = await file.read()
-
+        
         if file.filename.lower().endswith('.mp4'):
             audio = AudioSegment.from_file(BytesIO(content), format="mp4")
             output_file = "input_audio.mp3"
@@ -47,15 +47,15 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
                 f.write(content)
         else:
             return JSONResponse(content={"message": "Unsupported file format. Please upload MP3 or MP4."}, status_code=400)
-
+        
         logger.info("File saved successfully: %s", output_file)
-
+        
         # Step 2: Transcribe the audio with diarization
         transcription_result = await transcribe_audio()
-
+        
         # Step 3: Extract speaker segments
         speaker_segments = await extract_speaker_segments()
-
+        
         # Step 4: Generate speech from custom text using the first speaker
         if speaker_segments:
             first_speaker = min(speaker_segments.keys())
@@ -63,7 +63,7 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
             return generated_speech
         else:
             return JSONResponse(content={"message": "No speakers detected in the audio."}, status_code=400)
-
+        
     except Exception as e:
         logger.error("Error processing audio: %s", e)
         return JSONResponse(content={"message": f"Error processing audio: {e}"}, status_code=500)
@@ -89,7 +89,7 @@ async def transcribe_audio():
     except Exception as e:
         logger.error("Error transcribing audio: %s", e)
         return JSONResponse(content={"message": f"Error transcribing audio: {e}"}, status_code=500)
-    
+
 @app.post("/extract_speaker_segments/")
 async def extract_speaker_segments():
     try:
@@ -108,7 +108,7 @@ async def extract_speaker_segments():
                 speaker_segments[speaker] = segment
         for speaker, segment in speaker_segments.items():
             segment.export(f"speaker_{speaker}.mp3", format="mp3")
-        return speaker_segments
+        return speaker_segments  # <- Return the actual dictionary here
     except Exception as e:
         logger.error("Error extracting speaker segments: %s", e)
         return JSONResponse(content={"message": f"Error extracting speaker segments: {e}"}, status_code=500)
