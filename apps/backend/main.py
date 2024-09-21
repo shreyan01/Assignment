@@ -72,7 +72,6 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
 async def transcribe_audio():
     try:
         headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:129.0) Gecko/20100101 Firefox/129.0",
             "Accept": "/",
             "Content-Type": "application/json",
             "Authorization": f"token {DEEPGRAM_API_KEY}",
