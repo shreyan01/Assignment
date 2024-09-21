@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000/generate-audio"],  # Adjust this to match your frontend URL
+    allow_origins=["https://voice-ai-rouge.vercel.app", "https://voice-ai-rouge.vercel.app/generate-audio"],  # Adjust this to match your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -58,7 +58,7 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
         
         # Step 4: Generate speech from custom text using the first speaker
         if speaker_segments:
-            first_speaker = min(speaker_segments.keys())
+            first_speaker = min(speaker_segments)
             generated_speech = await generate_speech_from_speaker(first_speaker, text)
             return generated_speech
         else:
@@ -108,7 +108,7 @@ async def extract_speaker_segments():
                 speaker_segments[speaker] = segment
         for speaker, segment in speaker_segments.items():
             segment.export(f"speaker_{speaker}.mp3", format="mp3")
-        return speaker_segments
+        return speaker_segments  # <- Return the actual dictionary here
     except Exception as e:
         logger.error("Error extracting speaker segments: %s", e)
         return JSONResponse(content={"message": f"Error extracting speaker segments: {e}"}, status_code=500)
@@ -151,7 +151,7 @@ async def text_to_speech(voice_id: str, text: str):
             "model_id": "eleven_monolingual_v1",
             "voice_settings": {
                 "stability": 0.5,
-                "similarity_boost": 1
+                "similarity_boost": 0.9
             }
         }
         response = requests.post(url, json=data, headers=headers)

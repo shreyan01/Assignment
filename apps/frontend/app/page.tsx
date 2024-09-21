@@ -1,29 +1,26 @@
 "use client"
 
-import { useState } from 'react'
 import { Button } from "./components/ui/button"
-import { Input } from "./components/ui/input"
-import { Mic, Play, Upload, Wand2 } from 'lucide-react'
+import { Play, Upload, Wand2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export default function Component() {
-  const [isRecording, setIsRecording] = useState(false)
 
   const router = useRouter()
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Wand2 className="h-8 w-8 text-purple-600" />
-            <span className="text-2xl font-bold text-gray-800 dark:text-white">VoiceAI</span>
+            <span className="text-2xl font-bold text-purple-600">VoiceAI</span>
           </div>
           <div className="hidden md:flex space-x-4">
-            <a href="#features" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Features</a>
-            <a href="#how-it-works" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">How It Works</a>
-            <a href="#pricing" className="text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white">Pricing</a>
+            <a href="#features" className="text-gray-600 hover:text-gray-800 ">Features</a>
+            <a href="#how-it-works" className="text-gray-600 hover:text-gray-800 ">How It Works</a>
+            <a href="#pricing" className="text-gray-600 hover:text-gray-800">Pricing</a>
           </div>
-          <Button>Sign Up</Button>
+          <Button className="text-purple-400">Sign Up</Button>
         </nav>
       </header>
 
@@ -32,7 +29,7 @@ export default function Component() {
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
             Your Voice, Amplified by AI
           </h1>
-          <p className="text-xl mb-8 text-gray-600 dark:text-gray-300">
+          <p className="text-xl mb-8 text-purple-500">
             Upload your voice, generate custom audio. It's that simple.
           </p>
           <div className="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4">
