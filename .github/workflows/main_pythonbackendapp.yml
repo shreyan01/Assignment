@@ -26,14 +26,14 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-      
+
       - name: Install dependencies
-        run: pip install -r requirements.txt
-        
+        run: pip install -r requirements.txt  # Since your requirements.txt is in the root
+
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip -r release.zip ./*  # Zip the entire repository
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -61,7 +61,6 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -75,4 +74,8 @@ jobs:
         with:
           app-name: 'PythonBackendApp'
           slot-name: 'Production'
-          
+          package: release.zip  # Deploying the zipped app
+
+      - name: Set Python startup command
+        run: |
+          az webapp config set --name PythonBackendApp --resource-group voiceai_backend --startup-file "uvicorn apps.backend.main:app --host 0.0.0.0 --port 8000"
