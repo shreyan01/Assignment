@@ -92,7 +92,7 @@ async def transcribe_audio():
         )
 
         # STEP 3: Call the transcribe_file method with the text payload and options
-        response = deepgram.listen.rest.v("1").transcribe_file(payload, options, timeout=httpx.Timeout(300.0, connect=10.0))
+        response = deepgram.listen.prerecorded.v("1").transcribe_file(payload, options, timeout=httpx.Timeout(300.0, connect=10.0))
         # Check for SSL errors
         response.raise_for_status()  # Raises an error for bad responses
         response_json = response.json()
