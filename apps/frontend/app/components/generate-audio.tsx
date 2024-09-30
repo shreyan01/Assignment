@@ -41,8 +41,8 @@ export default function GenerateAudioPage() {
     formData.append('text', customText)
 
     try {
-      console.log('Sending request to:', 'https://backend-python-shreyan-dbe2a1e65dc1.herokuapp.com/process_audio/')
-      const response = await fetch('https://backend-python-shreyan-dbe2a1e65dc1.herokuapp.com/process_audio/', {
+      console.log('Sending request to:', 'https://89c7-122-161-52-125.ngrok-free.app/process_audio/')
+      const response = await fetch('https://89c7-122-161-52-125.ngrok-free.app/process_audio/', {
         method: 'POST',
         body: formData,
       })
