@@ -8,12 +8,6 @@ from io import BytesIO
 from dotenv import load_dotenv
 import logging
 from fastapi.middleware.cors import CORSMiddleware
-from deepgram import (
-    DeepgramClient,
-    PrerecordedOptions,
-    FileSource
-)
-import httpx
 import boto3
 from botocore.exceptions import NoCredentialsError
 
@@ -104,23 +98,31 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
 @app.post("/transcribe_audio/")
 async def transcribe_audio():
     try:
-        url="https://api.deepgram.com/v1/listen"
-        headers={
-            "Authorization":"Token DEEPGRAM_API_KEY",
-            "Content-Type":"audio/mpeg",
-            "diarize":"True"
+        url = "https://api.deepgram.com/v1/listen"
+        headers = {
+            "Authorization": f"Token {DEEPGRAM_API_KEY}",
+            "Content-Type": "audio/mpeg"
         }
+        params = {
+            "model": "nova-2",
+            "smart_format": "true",
+            "diarize": "true"
+        }
+        
         with open("input_audio.mp3", "rb") as audio_file:
-            response = requests.post(url, headers=headers, data=audio_file)
-        # Check for SSL errors
-        response.raise_for_status()  # Raises an error for bad responses
+            response = requests.post(url, headers=headers, params=params, data=audio_file)
+        
+        # Check for errors
+        response.raise_for_status()
+        
         response_json = response.json()
         with open("output.json", "w") as file:
             json.dump(response_json, file, indent=4)
+        
         return response_json  # Return the actual JSON data
-    except requests.exceptions.SSLError as ssl_error:
-        logger.error("SSL error occurred: %s", ssl_error)
-        return JSONResponse(content={"message": "SSL error occurred while connecting to Deepgram."}, status_code=500)
+    except requests.exceptions.RequestException as e:
+        logger.error("Error connecting to Deepgram API: %s", e)
+        return JSONResponse(content={"message": f"Error connecting to Deepgram API: {e}"}, status_code=500)
     except Exception as e:
         logger.error("Error transcribing audio: %s", e)
         return JSONResponse(content={"message": f"Error transcribing audio: {e}"}, status_code=500)
