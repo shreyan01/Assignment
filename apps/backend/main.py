@@ -14,6 +14,8 @@ from deepgram import (
     FileSource
 )
 import httpx
+import boto3
+from botocore.exceptions import NoCredentialsError
 
 load_dotenv(dotenv_path=".env")
 
@@ -34,6 +36,24 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Add these environment variables
+AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+S3_BUCKET = os.getenv("S3_BUCKET")
+
+def upload_to_s3(local_file, s3_file):
+    s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY,
+                      aws_secret_access_key=AWS_SECRET_KEY)
+    try:
+        s3.upload_file(local_file, S3_BUCKET, s3_file)
+        return True
+    except FileNotFoundError:
+        logger.error("The file was not found")
+        return False
+    except NoCredentialsError:
+        logger.error("Credentials not available")
+        return False
 
 @app.post("/process_audio/")
 async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
@@ -56,6 +76,13 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
         
         logger.info("File saved successfully: %s", output_file)
         
+        # Upload to S3
+        s3_file_name = f"audio_files/{file.filename}"
+        if upload_to_s3(output_file, s3_file_name):
+            logger.info(f"File uploaded to S3: {s3_file_name}")
+        else:
+            logger.error("Failed to upload to S3")
+        
         # Step 2: Transcribe the audio with diarization
         transcription_result = await transcribe_audio()
         
@@ -77,22 +104,14 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
 @app.post("/transcribe_audio/")
 async def transcribe_audio():
     try:
-        deepgram = DeepgramClient(DEEPGRAM_API_KEY)
-        with open("input_audio.mp3", "rb") as file:
-            audio_data = file.read()
-        payload: FileSource = {
-            "buffer": audio_data,
+        url="https://api.deepgram.com/v1/listen"
+        headers={
+            "Authorization":"Token DEEPGRAM_API_KEY",
+            "Content-Type":"audio/mpeg",
+            "diarize":"True"
         }
-
-        #STEP 2: Configure Deepgram options for audio analysis
-        options = PrerecordedOptions(
-            model="nova-2",
-            smart_format=True,
-            diarize=True
-        )
-
-        # STEP 3: Call the transcribe_file method with the text payload and options
-        response = deepgram.listen.prerecorded.v("1").transcribe_file(payload, options, timeout=httpx.Timeout(300.0, connect=10.0))
+        with open("input_audio.mp3", "rb") as audio_file:
+            response = requests.post(url, headers=headers, data=audio_file)
         # Check for SSL errors
         response.raise_for_status()  # Raises an error for bad responses
         response_json = response.json()
