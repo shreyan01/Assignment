@@ -72,11 +72,6 @@ async def process_audio(file: UploadFile = File(...), text: str = Form(...)):
         logger.info("File saved successfully: %s", output_file)
         
         # Upload to S3
-        s3_file_name = f"audio_files/{file.filename}"
-        if upload_to_s3(output_file, s3_file_name):
-            logger.info(f"File uploaded to S3: {s3_file_name}")
-        else:
-            logger.error("Failed to upload to S3")
         
         # Step 2: Transcribe the audio with diarization
         transcription_result = await transcribe_audio()
